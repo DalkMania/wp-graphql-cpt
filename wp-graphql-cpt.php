@@ -23,7 +23,7 @@ if (!class_exists('\WPGraphQL\Extensions\CPT')) {
 
             // Filters
             add_filter('register_post_type_args', [$this, 'filterPostTypes'], 10, 2);
-            add_filter('register_taxonomy_args', [$this, 'filterTaxonomies'], 10, 3);
+            add_filter('register_taxonomy_args', [$this, 'filterTaxonomies'], 10, 2);
         }
 
         public function filterPostTypes($args, $post_type)
@@ -54,7 +54,7 @@ if (!class_exists('\WPGraphQL\Extensions\CPT')) {
             return $args;
         }
 
-        public function filterTaxonomies($args, $taxonomy, $object_type)
+        public function filterTaxonomies($args, $taxonomy)
         {
             $wp_default_taxonomies = [
                 'category',
@@ -67,14 +67,17 @@ if (!class_exists('\WPGraphQL\Extensions\CPT')) {
 
             // Filter Out Truly Custom Taxonomies, we don't want to mess around with the others
             if (!in_array($taxonomy, $wp_default_taxonomies) && !$this->graphQLKeysExists($args)) {
-                $graphQLArgs = [
-                    'show_in_graphql' => true,
-                    'graphql_single_name' => $this->cleanStrings($args['labels']['singular_name']),
-                    'graphql_plural_name' => $this->cleanStrings($args['labels']['name'])
-                ];
+                if($args['labels']) {
+                    $graphQLArgs = [
+                        'show_in_graphql' => true,
+                        'graphql_single_name' => $this->cleanStrings($args['labels']['singular_name']),
+                        'graphql_plural_name' => $this->cleanStrings($args['labels']['name'])
+                    ];
+    
+                    // Merge args together.
+                    return array_merge($args, $graphQLArgs);
+                }
 
-                // Merge args together.
-                return array_merge($args, $graphQLArgs);
             }
 
             return $args;
@@ -99,6 +102,6 @@ if (!class_exists('\WPGraphQL\Extensions\CPT')) {
 }
 
 // Boot Plugin
-add_action('graphql_init', function () {
+add_action('plugins_loaded', function () {
     new CPT;
 });
