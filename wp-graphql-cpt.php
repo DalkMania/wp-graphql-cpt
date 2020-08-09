@@ -36,7 +36,9 @@ if (!class_exists('\WPGraphQL\Extensions\CPT')) {
                 'nav_menu_item',
                 'custom_css',
                 'customize_changeset',
-                'oembed_cache'
+                'oembed_cache',
+                'user_request',
+                'wp_block',
             ];
 
             // Filter Out Truly Custom Post Types, we don't want to mess around with the others
@@ -63,21 +65,21 @@ if (!class_exists('\WPGraphQL\Extensions\CPT')) {
                 'link_category',
                 'nav_menu_item',
                 'post_format',
+                'action-group'
             ];
 
             // Filter Out Truly Custom Taxonomies, we don't want to mess around with the others
             if (!in_array($taxonomy, $wp_default_taxonomies) && !$this->graphQLKeysExists($args)) {
-                if($args['labels']) {
+                if ($args['labels']) {
                     $graphQLArgs = [
                         'show_in_graphql' => true,
                         'graphql_single_name' => $this->cleanStrings($args['labels']['singular_name']),
                         'graphql_plural_name' => $this->cleanStrings($args['labels']['name'])
                     ];
-    
+
                     // Merge args together.
                     return array_merge($args, $graphQLArgs);
                 }
-
             }
 
             return $args;
