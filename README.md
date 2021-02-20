@@ -1,5 +1,4 @@
-WP GraphQL Custom Post Types and Custom Taxonomies
-===============
+# WP GraphQL Custom Post Types and Custom Taxonomies
 
 This plugin is an add-on for the awesome [WP GraphQL][wp-graphql]
 

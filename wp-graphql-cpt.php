@@ -4,7 +4,7 @@
  * Description: Exposes all registered Custom Post Types and Custom Taxonomies to the WPGraphQL EndPoint.
  * Author: Niklas Dahlqvist
  * Author URI: https://www.niklasdahlqvist.com
- * Version: 0.3
+ * Version: 0.4
  * License: GPL2+
  */
 
@@ -28,6 +28,7 @@ if (!class_exists('\WPGraphQL\Extensions\CPT')) {
 
         public function filterPostTypes($args, $post_type)
         {
+            $graphQLArgs = [];
             $wp_default_post_types = [
                 'post',
                 'page',
@@ -43,11 +44,13 @@ if (!class_exists('\WPGraphQL\Extensions\CPT')) {
 
             // Filter Out Truly Custom Post Types, we don't want to mess around with the others
             if (!in_array($post_type, $wp_default_post_types) && !$this->graphQLKeysExists($args)) {
-                $graphQLArgs = [
-                    'show_in_graphql' => true,
-                    'graphql_single_name' => $this->cleanStrings($args['labels']['singular_name']),
-                    'graphql_plural_name' => $this->cleanStrings($args['labels']['name'])
-                ];
+                if (isset($args['labels']) && isset($args['public']) && $args['public'] == true) {
+                    $graphQLArgs = [
+                        'show_in_graphql' => true,
+                        'graphql_single_name' => $this->cleanStrings($args['labels']['singular_name']),
+                        'graphql_plural_name' => $this->cleanStrings($args['labels']['name'])
+                    ];
+                }
 
                 // Merge args together.
                 return array_merge($args, $graphQLArgs);
@@ -70,7 +73,7 @@ if (!class_exists('\WPGraphQL\Extensions\CPT')) {
 
             // Filter Out Truly Custom Taxonomies, we don't want to mess around with the others
             if (!in_array($taxonomy, $wp_default_taxonomies) && !$this->graphQLKeysExists($args)) {
-                if ($args['labels']) {
+                if (isset($args['labels'])) {
                     $graphQLArgs = [
                         'show_in_graphql' => true,
                         'graphql_single_name' => $this->cleanStrings($args['labels']['singular_name']),
