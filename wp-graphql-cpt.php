@@ -4,7 +4,7 @@
  * Description: Exposes all registered Custom Post Types and Custom Taxonomies to the WPGraphQL EndPoint.
  * Author: Niklas Dahlqvist
  * Author URI: https://www.niklasdahlqvist.com
- * Version: 0.4
+ * Version: 0.5
  * License: GPL2+
  */
 
@@ -40,6 +40,8 @@ if (!class_exists('\WPGraphQL\Extensions\CPT')) {
                 'oembed_cache',
                 'user_request',
                 'wp_block',
+                // Exclude ACF Field Groups
+                'acf-field-group'
             ];
 
             // Filter Out Truly Custom Post Types, we don't want to mess around with the others
