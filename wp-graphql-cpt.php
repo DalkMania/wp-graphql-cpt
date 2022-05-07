@@ -103,7 +103,7 @@ if (!class_exists('\WPGraphQL\Extensions\CPT')) {
 
         public function cleanStrings($string)
         {
-            return preg_replace('/[\s_-]/', '', lcfirst(ucwords($string)));
+            return preg_replace('/[^a-zA-Z0-9_]+/', '', lcfirst(ucwords($string)));
         }
     }
 }
