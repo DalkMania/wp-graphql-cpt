@@ -15,4 +15,11 @@ Your theme or other plugins may use custom post types and taxonomies to add cust
 
 Just activate the plugin and the data will be avialble to you at the WP GraphQL Endpoint for you to query.
 
+## Notes
+
+If you are using ACF. Don't forget to add [WP GraphQL ACF][wp-graphql-acf]. Since this plugin will filter those out.
+If you are using WooCommerce. Don't forget to add [WPGraphQL for WooCommerce][wp-graphql-woo]. Since this plugin will filter those out.
+
 [wp-graphql]: https://github.com/wp-graphql/wp-graphql
+[wp-graphql-acf]: https://www.wpgraphql.com/acf
+[wp-graphql-woo]: https://github.com/wp-graphql/wp-graphql-woocommerce

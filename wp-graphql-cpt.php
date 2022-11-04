@@ -4,7 +4,7 @@
  * Description: Exposes all registered Custom Post Types and Custom Taxonomies to the WPGraphQL EndPoint.
  * Author: Niklas Dahlqvist
  * Author URI: https://www.niklasdahlqvist.com
- * Version: 0.5
+ * Version: 0.7
  * License: GPL2+
  */
 
@@ -40,8 +40,19 @@ if (!class_exists('\WPGraphQL\Extensions\CPT')) {
                 'oembed_cache',
                 'user_request',
                 'wp_block',
+                'wp_template',
+                'wp_template_part',
+                'wp_global_styles',
+                'wp_navigation',
                 // Exclude ACF Field Groups
-                'acf-field-group'
+                'acf-field-group',
+                // Exclude WooCommerce products
+                'product',
+                'product_variation',
+                'shop_coupon',
+                'shop_order',
+                'shop_order_refund',
+                'shop_order_placehold'
             ];
 
             // Filter Out Truly Custom Post Types, we don't want to mess around with the others
@@ -70,7 +81,13 @@ if (!class_exists('\WPGraphQL\Extensions\CPT')) {
                 'link_category',
                 'nav_menu_item',
                 'post_format',
-                'action-group'
+                'wp_theme',
+                'wp_template_part_area',
+                'product_type',
+                'product_visibility',
+                'product_cat',
+                'product_tag',
+                'product_shipping_class',
             ];
 
             // Filter Out Truly Custom Taxonomies, we don't want to mess around with the others
@@ -110,5 +127,5 @@ if (!class_exists('\WPGraphQL\Extensions\CPT')) {
 
 // Boot Plugin
 add_action('plugins_loaded', function () {
-    new CPT;
+    new CPT();
 });
