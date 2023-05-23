@@ -55,18 +55,22 @@ if (!class_exists('\WPGraphQL\Extensions\CPT')) {
                 'shop_order_placehold'
             ];
 
+            $wp_default_post_types = apply_filters( 'graphql_cpt_excluded_post_types', $wp_default_post_types );
+
             // Filter Out Truly Custom Post Types, we don't want to mess around with the others
             if (!in_array($post_type, $wp_default_post_types) && !$this->graphQLKeysExists($args)) {
                 if (isset($args['labels']) && isset($args['public']) && $args['public'] == true) {
-                    $graphQLArgs = [
+                    $graphQLArgs = apply_filters( 'graphql_cpt_post_type_graphql_args', [
                         'show_in_graphql' => true,
                         'graphql_single_name' => $this->cleanStrings($args['labels']['singular_name']),
                         'graphql_plural_name' => $this->cleanStrings($args['labels']['name'])
-                    ];
-                }
+                    ], $post_type );
 
-                // Merge args together.
-                return array_merge($args, $graphQLArgs);
+                    $graphQLArgs = apply_filters( "graphql_cpt_{$post_type}_graphql_args", $graphQLArgs );
+
+                    // Merge args together.
+                    return apply_filters( "graphql_cpt_{$post_type}_merged_args", array_merge($args, $graphQLArgs) );
+                }
             }
 
             return $args;
@@ -90,17 +94,21 @@ if (!class_exists('\WPGraphQL\Extensions\CPT')) {
                 'product_shipping_class',
             ];
 
+            $wp_default_taxonomies = apply_filters( 'graphql_cpt_excluded_taxonomies', $wp_default_taxonomies );
+
             // Filter Out Truly Custom Taxonomies, we don't want to mess around with the others
             if (!in_array($taxonomy, $wp_default_taxonomies) && !$this->graphQLKeysExists($args)) {
                 if (isset($args['labels'])) {
-                    $graphQLArgs = [
+                    $graphQLArgs = apply_filters( 'graphql_cpt_taxonomy_graphql_args', [
                         'show_in_graphql' => true,
                         'graphql_single_name' => $this->cleanStrings($args['labels']['singular_name']),
                         'graphql_plural_name' => $this->cleanStrings($args['labels']['name'])
-                    ];
+                    ], $taxonomy );
+
+                    $graphQLArgs = apply_filters( "graphql_cpt_{$taxonomy}_graphql_args", $graphQLArgs );
 
                     // Merge args together.
-                    return array_merge($args, $graphQLArgs);
+                    return apply_filters( "graphql_cpt_{$taxonomy}_merged_args", array_merge($args, $graphQLArgs) );
                 }
             }
 
@@ -109,11 +117,11 @@ if (!class_exists('\WPGraphQL\Extensions\CPT')) {
 
         public function graphQLKeysExists($args)
         {
-            $graphQLKeys = [
+            $graphQLKeys = apply_filters( 'graphql_cpt_existing_keys_to_check_against', [
                 'show_in_graphql',
                 'graphql_single_name',
                 'graphql_plural_name'
-            ];
+            ] );
 
             return !array_diff_key(array_flip($graphQLKeys), $args);
         }
